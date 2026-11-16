@@ -21,23 +21,25 @@ pip install -r requirements.txt
 ## Utilisation
 
 ```bash
-# Lister les agents et leur état
-python main.py --list
+# Pipeline complet tel que déclaré dans le YAML
+python agents/run.py "Ajouter un hook useDebounce dans src/hooks"
 
-# Run avec l'objectif par défaut
-python main.py
+# Sauter l'architecte pour une petite tâche bien définie
+python agents/run.py "Corrige le bug de useAuth" --skip architect
 
-# Run avec un objectif personnalisé
-python main.py "Refactorer le composant Settings en TypeScript strict"
+# Run minimal et rapide : juste le développeur
+python agents/run.py "Écris le composant Badge" --only developer
 
-# Désactiver certains agents pour ce run
-python main.py --skip architect
+# Activer un agent désactivé dans le YAML pour ce run précis
+python agents/run.py "Ajouter le hook + ses tests" --enable tester
 
-# Exécuter uniquement certains agents (ordre du YAML conservé)
-python main.py --only developer
-
-# Activer des agents désactivés dans le YAML
-python main.py --enable developer
+# Voir l'état du registre
+python agents/run.py --list
+#   architect    ✅ actif    — Architecte React Native
+#   developer    ✅ actif    — Développeur TypeScript
+#   reviewer     ✅ actif    — Relecteur de code
+#   tester       ✅ actif    — Ingénieur tests Jest
+#   doc          ✅ actif    — Rédacteur technique
 ```
 
 Le résultat final est écrit dans `output.md`.
