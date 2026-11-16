@@ -1,0 +1,49 @@
+# LM Studio (compatible API OpenAI)
+llm:
+  base_url: "http://localhost:1234/v1"
+  api_key: "lm-studio"
+  model: "openai/qwen2.5-coder-7b-instruct-mlx:2"   # le nom importe peu
+  temperature: 0.2
+  max_tokens: 4000
+
+# Outils partagés : liste des dossiers que les agents peuvent explorer
+project:
+  source_dirs: ["./src"]
+
+# Le pipeline : l'ORDRE des entrées = l'ordre d'exécution.
+# Chaque tâche reçoit en contexte la sortie de la tâche précédente.
+# - enabled: false  -> l'agent est sauté (aucun appel LLM)
+# - ajouter un agent -> ajouter une entrée dans cette liste
+agents:
+  - id: architect
+    enabled: true
+    role: "Architecte React Native"
+    goal: "Analyser la structure du projet et produire un plan de modification précis (fichiers, signatures, types TypeScript)"
+    backstory: >
+      Expert senior en TypeScript et React Native. Patterns modernes : hooks,
+      React Navigation, Zustand/Redux. Vous ne codez pas, vous planifiez.
+    tools: [read_file, read_dir]
+    task: |
+      Objectif du ticket : {objective}
+
+      1. Explore la structure du projet (dossier src/).
+      2. Identifie les fichiers concernés.
+      3. Produis un plan : fichiers à créer/modifier, avec les types et
+         signatures TypeScript de chaque fonction/composant.
+    expected_output: "Un plan détaillé avec chemins de fichiers, types et signatures."
+
+  - id: developer
+    enabled: true
+    role: "Développeur TypeScript"
+    goal: "Écrire le code TypeScript/React Native complet demandé, prêt à coller dans le projet"
+    backstory: >
+      Développeur React Native rigoureux. TypeScript strict, typé explicitement,
+      interfaces claires. Respecte la structure Expo/React Navigation du projet.
+    tools: [read_file, read_dir]
+    task: |
+      Objectif du ticket : {objective}
+
+      {context_note}Écris le code TypeScript complet. Sors chaque fichier dans
+      un bloc de code avec son chemin en en-tête. Code final, typé, avec
+      tous les imports. Pas de pseudo-code.
+    expected_output: "Le code complet de chaque fichier, en blocs markdown nommés."

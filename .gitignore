@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+
+# Environnement / secrets
+.env
+*.local.yaml
+
+# Sorties générées
+output.md
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
